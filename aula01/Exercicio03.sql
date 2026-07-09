@@ -43,7 +43,7 @@ IF EXISTS (SELECT TOP 1 1 FROM @InsumosNaoCadastrados)
 					WHERE IdMateriaPrima = @IdMateriaPrimaAtual;
 			END
 
-		DELETE FROM #NovosInsumos;
+		DROP TABLE IF EXISTS #NovosInsumos;
 
 		RETURN;
 	END

@@ -4,7 +4,7 @@ USE woodcraftDjota;
 
 -- 1. Declare uma variável chamada @IdPedido do tipo INT e atribua um valor a ela (ex: 1, 2 ou 99).
 
-DECLARE @IdPedido INT = 67;
+DECLARE @IdPedido INT = 3;
 
 -- 2. O script deve consultar a tabela Pedido para obter as informações do pedido associado a este ID.
 
@@ -23,7 +23,8 @@ IF NOT EXISTS ( SELECT TOP 1 1 FROM [dbo].[Pedido] WITH(NOLOCK) WHERE Id = @IdPe
 -- "Pedido [X] pendente de entrega. Prazo prometido: [DataPromessa]."
 IF EXISTS ( SELECT TOP 1 1 FROM [dbo].[Pedido] WITH(NOLOCK) WHERE Id = @IdPedido AND DataEntrega is null)
 	BEGIN
-		PRINT('Pedido [' + CAST(@IdPedido AS VARCHAR(10)) + '] pendente de entrega.');
+		DECLARE @DataPromessa DATE = (SELECT TOP 1 DataPromessa FROM [dbo].[Pedido] WITH(NOLOCK) WHERE Id = @IdPedido);
+		PRINT('Pedido [' + CAST(@IdPedido AS VARCHAR(10)) + '] pendente de entrega. Prazo prometido: ' + CAST(@DataPromessa AS VARCHAR(20)));
 	END
 
 -- c) Caso o pedido já tenha sido entregue (DataEntrega não é NULL): Exiba a mensagem:
@@ -31,5 +32,6 @@ IF EXISTS ( SELECT TOP 1 1 FROM [dbo].[Pedido] WITH(NOLOCK) WHERE Id = @IdPedido
 
 IF EXISTS ( SELECT TOP 1 1 FROM [dbo].[Pedido] WITH(NOLOCK) WHERE Id = @IdPedido AND DataEntrega is not null)
 	BEGIN
-		PRINT('Pedido [' + CAST(@IdPedido AS VARCHAR(10)) + '] entregue com sucesso.');
+		DECLARE @DataEntrega DATE = (SELECT TOP 1 DataEntrega FROM [dbo].[Pedido] WITH(NOLOCK) WHERE Id = @IdPedido);
+		PRINT('Pedido [' + CAST(@IdPedido AS VARCHAR(10)) + '] entregue com sucesso em: ' + CAST(@DataEntrega AS VARCHAR(20)));
 	END
