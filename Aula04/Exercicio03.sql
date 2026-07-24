@@ -3,7 +3,7 @@ GO
 
 -- Exercício 3: Procedure Transacional de Encerramento de Etapa e Atualização de Estoque Físico -----------------------
 
-CREATE PROC sp_FinalizarEtapaFabricacao
+CREATE OR ALTER PROC sp_FinalizarEtapaFabricacao
 	@IdHistoricoProducao INT
 	AS
 	/*
@@ -20,7 +20,11 @@ CREATE PROC sp_FinalizarEtapaFabricacao
 
 											SELECT * FROM [dbo].[HistoricoProducao]
 
+											DECLARE @DataInicial DATETIME = GETDATE()
+
 											EXEC sp_FinalizarEtapaFabricacao	@IdhistoricoProducao = @IdHistoricoProducaoTeste
+
+											SELECT	DATEDIFF(ms, @DataInicial, GETDATE()) AS 'Tempo (ms)'
 
 											SELECT * FROM [dbo].[HistoricoProducao]
 										ROLLBACK TRAN
